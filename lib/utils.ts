@@ -10,7 +10,11 @@ export const parseStringify =(value:unknown) =>{
   
   return JSON.parse(JSON.stringify(value));
 }
-
+export const calculatePercentage = (sizeInBytes: number) => {
+  const totalSizeInBytes = 2 * 1024 * 1024 * 1024; // 2GB in bytes
+  const percentage = (sizeInBytes / totalSizeInBytes) * 100;
+  return Number(percentage.toFixed(2));
+};
 export const convertFileToUrl = (file: File) => URL.createObjectURL(file);
 
 export const getFileType = (fileName: string) => {
@@ -189,4 +193,42 @@ export const getFileTypesParams = (type: string) => {
     default:
       return ["document"];
   }
+};
+
+// DASHBOARD UTILS
+
+export const getUsageSummary = (totalSpace: any) => {
+  return [
+    {
+      title: "Documents",
+      size: totalSpace.document.size,
+      latestDate: totalSpace.document.latestDate,
+      icon: "/assets/icons/file-document-light.svg",
+      url: "/documents",
+    },
+    {
+      title: "Images",
+      size: totalSpace.image.size,
+      latestDate: totalSpace.image.latestDate,
+      icon: "/assets/icons/file-image-light.svg",
+      url: "/images",
+    },
+    {
+      title: "Media",
+      size: totalSpace.video.size + totalSpace.audio.size,
+      latestDate:
+        totalSpace.video.latestDate > totalSpace.audio.latestDate
+          ? totalSpace.video.latestDate
+          : totalSpace.audio.latestDate,
+      icon: "/assets/icons/file-video-light.svg",
+      url: "/media",
+    },
+    {
+      title: "Others",
+      size: totalSpace.other.size,
+      latestDate: totalSpace.other.latestDate,
+      icon: "/assets/icons/file-other-light.svg",
+      url: "/others",
+    },
+  ];
 };
